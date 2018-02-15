@@ -14,8 +14,18 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.kevin.catch_my_beer.models.BeerGeometry;
 import com.example.kevin.catch_my_beer.models.Tag;
 import com.example.kevin.catch_my_beer.utils.Adapter;
+import com.example.kevin.catch_my_beer.utils.Constant;
+import com.example.kevin.catch_my_beer.utils.FastDialog;
+import com.example.kevin.catch_my_beer.utils.Network;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,10 +41,7 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, FilterListener<Tag> {
 
-    private static final String TAG ="selectOne" ;
-    private static final String TAG2 ="selectTwo" ;
-    private static final String TAG3 ="selectThree" ;
-    private static final String TAG4 ="selectFour" ;
+    private static final String TAG ="tagSelect" ;
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private Filter<Tag> mFilter;
@@ -88,9 +95,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng paris = new LatLng(48.864716, 2.349014);
-        mMap.addMarker(new MarkerOptions().position(paris).title("Ici c'est PARIS"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
+        //LatLng paris = new LatLng(48.864716, 2.349014);
+        //mMap.addMarker(new MarkerOptions().position(paris).title("Ici c'est PARIS"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -98,8 +107,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
+    }
 
-
+    private void setMarker(BeerGeometry location, String title) {
+        // Add a marker for beer and move the camera
+        LatLng bar =  new LatLng(location.getLocation().getLat(), location.getLocation().getLng());
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(bar).title(title));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bar));
     }
 
     @Override
@@ -126,17 +141,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onNothingSelected() {
-        Log.e(TAG2, "onFiltersTwo");
+        Log.e(TAG, "onFiltersTwo");
     }
 
     @Override
     public void onFilterSelected(Tag tag) {
-        Log.e(TAG3, "onFiltersThree");
+        Log.e(TAG,"tag select"+tag.getText());
+        Log.e(TAG, "onFiltersThree");
+        /*if(!tag.getText().isEmpty()){
+            //TODO : verification d'une connexion Internet
+
+            if(Network.isNetworkAvailable(MapsActivity.this)) {
+                //TODO : requête au web service
+                // Instantiate the RequestQueue.
+                RequestQueue queue = Volley.newRequestQueue(MapsActivity.this);
+                String url = String.format(Constant.URL_GOOGLE_PLACE, editTextCity.getText().toString());
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.e(TAG, "json: "+response);
+
+                                getData(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String response = new String(error.networkResponse.data);
+
+                        getData(response);
+
+                    }
+                });
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+            } else {
+                FastDialog.showDialog(MapsActivity.this, FastDialog.SIMPLE_DIALOG, "Vous devez être connecté");
+            }
+        } else {
+            FastDialog.showDialog(MapsActivity.this, FastDialog.SIMPLE_DIALOG, "Vous devez renseigner une ville");
+        }*/
     }
 
     @Override
     public void onFilterDeselected(Tag tag) {
-        Log.e(TAG4, "onFiltersFour");
+        Log.e(TAG, "onFiltersFour");
     }
 
     public List<Tag> getTags() {

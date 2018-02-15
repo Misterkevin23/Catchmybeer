@@ -19,7 +19,7 @@ public class BeerGeometry {
         this.location = location;
     }
 
-    class Location{
+    public class Location{
         private float lat;
         private float lng;
 

@@ -22,7 +22,7 @@ public class TestActivity extends AppCompatActivity implements FilterListener<Ta
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        mFilter = (Filter<Tag>) findViewById(R.id.filter);
+        mFilter =findViewById(R.id.filter);
         mFilter.setAdapter(new Adapter(TestActivity.this, getTags()));
         mFilter.setListener(this);
 
@@ -43,7 +43,7 @@ public class TestActivity extends AppCompatActivity implements FilterListener<Ta
 
     @Override
     public void onFilterSelected(Tag tag) {
-
+        //petit comm
     }
 
     @Override

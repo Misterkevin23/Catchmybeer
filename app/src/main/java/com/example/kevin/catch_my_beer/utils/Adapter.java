@@ -21,19 +21,19 @@ public class Adapter extends FilterAdapter<Tag> {
             this.context = context;
         }
 
-        @NotNull
-        @Override
-        public FilterItem createView(int position, Tag item) {
-            FilterItem filterItem = new FilterItem(context);
+    @NotNull
+    @Override
+    public FilterItem createView(int position, Tag item) {
+        FilterItem filterItem = new FilterItem(context);
 
-            //filterItem.setStrokeColor(mColors[0]);
-            //filterItem.setTextColor(mColors[0]);
-            filterItem.setCheckedTextColor(ContextCompat.getColor(context, android.R.color.white));
-            filterItem.setColor(ContextCompat.getColor(context, android.R.color.white));
-            //filterItem.setCheckedColor(mColors[position]);
-            filterItem.setText(item.getText());
-            filterItem.deselect();
+        filterItem.setStrokeColor(ContextCompat.getColor(context, android.R.color.black));
+        filterItem.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+        filterItem.setCheckedTextColor(ContextCompat.getColor(context, android.R.color.white));
+        filterItem.setColor(ContextCompat.getColor(context, android.R.color.white));
+        filterItem.setCheckedColor(ContextCompat.getColor(context, android.R.color.black));
+        filterItem.setText(item.getText());
+        filterItem.deselect();
 
-            return filterItem;
-        }
+        return filterItem;
     }
+}

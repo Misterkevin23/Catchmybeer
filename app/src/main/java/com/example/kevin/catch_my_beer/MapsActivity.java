@@ -31,6 +31,10 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, FilterListener<Tag> {
 
+    private static final String TAG ="selectOne" ;
+    private static final String TAG2 ="selectTwo" ;
+    private static final String TAG3 ="selectThree" ;
+    private static final String TAG4 ="selectFour" ;
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private Filter<Tag> mFilter;
@@ -122,17 +126,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onNothingSelected() {
-
+        Log.e(TAG2, "onFiltersTwo");
     }
 
     @Override
     public void onFilterSelected(Tag tag) {
-
+        Log.e(TAG3, "onFiltersThree");
     }
 
     @Override
     public void onFilterDeselected(Tag tag) {
-
+        Log.e(TAG4, "onFiltersFour");
     }
 
     public List<Tag> getTags() {

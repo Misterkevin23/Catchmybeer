@@ -43,7 +43,7 @@ public class TestActivity extends AppCompatActivity implements FilterListener<Ta
 
     @Override
     public void onFilterSelected(Tag tag) {
-
+        //petit comm
     }
 
     @Override

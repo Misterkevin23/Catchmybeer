@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/CatchMyBeer.iml" filepath="$PROJECT_DIR$/CatchMyBeer.iml" />
       <module fileurl="file://C:\Users\Junior\Desktop\Catch-my-Beer\Catchmybeer\CatchMyBeer.iml" filepath="C:\Users\Junior\Desktop\Catch-my-Beer\Catchmybeer\CatchMyBeer.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/Catchmybeer.iml" filepath="$PROJECT_DIR$/Catchmybeer.iml" />
+>>>>>>> 2a720f9d78b21a35095dfde262098d69e124764f
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Junior\Desktop\Catch-my-Beer\Catchmybeer\app\app.iml" filepath="C:\Users\Junior\Desktop\Catch-my-Beer\Catchmybeer\app\app.iml" />
     </modules>
   </component>
 </project>

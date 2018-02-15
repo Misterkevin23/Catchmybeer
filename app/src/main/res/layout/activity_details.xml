@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.kevin.catch_my_beer.DetailsActivity">
+
+    <com.github.florent37.arclayout.ArcLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:arc_cropDirection="cropInside"
+        app:arc_height="90dp"
+        app:arc_padding="30dp"
+        android:elevation="5dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.github.florent37.arclayout.ArcLayout>
+
+</android.support.constraint.ConstraintLayout>

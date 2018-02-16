@@ -95,10 +95,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //LatLng paris = new LatLng(48.864716, 2.349014);
-        //mMap.addMarker(new MarkerOptions().position(paris).title("Ici c'est PARIS"));
+        LatLng paris = new LatLng(48.864716, 2.349014);
+        mMap.addMarker(new MarkerOptions().position(paris).title("Ici c'est PARIS"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
 
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);

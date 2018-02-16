@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 // TODO : lancer HomeActivity
-                Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, DetailsActivity.class);
                 //myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(myIntent); // démarrage
                 //finish(); // ou noHistory="true" dans le manifest

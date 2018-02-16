@@ -153,7 +153,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @SuppressLint("MissingPermission")
     private void enabledLocation(){
         mMap.setMyLocationEnabled(true);
-        ls.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 500, locationListener);
+        ls.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 500, locationListener);
     }
 
     @Override
@@ -251,6 +251,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Gson myGson = new Gson();
         BeerBar owm = myGson.fromJson(json, BeerBar.class);
         mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+
         if(owm.getResults().size() > 0 || owm.getStatus().equals("OK")) {
             Log.e(TAG, "data");
             for(BeerResult result : owm.getResults()){

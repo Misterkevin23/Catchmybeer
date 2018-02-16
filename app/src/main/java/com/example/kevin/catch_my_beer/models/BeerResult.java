@@ -53,7 +53,7 @@ public class BeerResult implements Serializable {
         this.opening_hours = opening_hours;
     }
 
-    private class Opening_hours implements Serializable{
+    public class Opening_hours implements Serializable{
         private boolean open_now;
 
         public boolean isOpen_now() {

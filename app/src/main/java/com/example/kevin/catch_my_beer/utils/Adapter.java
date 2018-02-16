@@ -30,7 +30,7 @@ public class Adapter extends FilterAdapter<Tag> {
         filterItem.setTextColor(ContextCompat.getColor(context, android.R.color.black));
         filterItem.setCheckedTextColor(ContextCompat.getColor(context, android.R.color.white));
         filterItem.setColor(ContextCompat.getColor(context, android.R.color.white));
-        filterItem.setCheckedColor(ContextCompat.getColor(context, android.R.color.black));
+        filterItem.setCheckedColor(ContextCompat.getColor(context, android.R.color.holo_orange_light));
         filterItem.setText(item.getText());
         filterItem.deselect();
 

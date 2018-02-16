@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 public class BeerResult implements Serializable {
     private String name;
-    private String rating;
-    private String vicinity;
-    private BeerGeometry geometry;
-    private Opening_hours opening_hours;
+    private String rating; // Nom de l'établissment
+    private String vicinity; // Nom de la rue
+    private BeerGeometry geometry; // localisation
+    private Opening_hours opening_hours;  // Hoaire d'ouverture
 
     public String getName() {
         return name;

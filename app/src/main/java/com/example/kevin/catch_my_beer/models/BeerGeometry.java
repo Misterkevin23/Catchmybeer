@@ -3,11 +3,13 @@ package com.example.kevin.catch_my_beer.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by kevin on 15/02/2018.
  */
 
-public class BeerGeometry {
+public class BeerGeometry implements Serializable{
 
     private Location location;
 
@@ -19,7 +21,7 @@ public class BeerGeometry {
         this.location = location;
     }
 
-    public class Location{
+    public class Location implements Serializable{
         private float lat;
         private float lng;
 

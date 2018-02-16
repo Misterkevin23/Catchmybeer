@@ -2,7 +2,12 @@ package com.example.kevin.catch_my_beer;
 
 import android.*;
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,7 +25,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.kevin.catch_my_beer.models.BeerBar;
 import com.example.kevin.catch_my_beer.models.BeerGeometry;
+import com.example.kevin.catch_my_beer.models.BeerResult;
 import com.example.kevin.catch_my_beer.models.Tag;
 import com.example.kevin.catch_my_beer.utils.Adapter;
 import com.example.kevin.catch_my_beer.utils.Constant;
@@ -32,7 +39,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 import com.yalantis.filter.listener.FilterListener;
 import com.yalantis.filter.widget.Filter;
 
@@ -45,6 +55,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private Filter<Tag> mFilter;
+    private LocationManager ls;
+    private LocationListener locationListener;
+    private double longitude;
+    private double latitude;
     //  ZoomControls zoom;
 
 
@@ -65,6 +79,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //the text to show when there's no selected items
         mFilter.setNoSelectedItemText(getString(R.string.str_all_selected));
         mFilter.build();
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.e(TAG, "onLocationChanged lat "+location.getLatitude()+" lon "+location.getLongitude());
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
 
       /*  zoom = (ZoomControls) findViewById(R.id.zcZoom);
         zoom.setOnZoomOutClickListener(new View.OnClickListener() {
@@ -97,25 +134,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng paris = new LatLng(48.864716, 2.349014);
         mMap.addMarker(new MarkerOptions().position(paris).title("Ici c'est PARIS"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(paris));
 
         mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
 
+        ls = (LocationManager) getSystemService(LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+            enabledLocation();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
             }
         }
+
     }
 
-    private void setMarker(BeerGeometry location, String title) {
-        // Add a marker for beer and move the camera
-        LatLng bar =  new LatLng(location.getLocation().getLat(), location.getLocation().getLng());
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(bar).title(title));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(bar));
+    @SuppressLint("MissingPermission")
+    private void enabledLocation(){
+        mMap.setMyLocationEnabled(true);
+        ls.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 500, locationListener);
     }
 
     @Override
@@ -125,7 +163,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case MY_PERMISSION_FINE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mMap.setMyLocationEnabled(true);
+                        enabledLocation();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Cette application a besoin de votre localisation", Toast.LENGTH_LONG).show();
@@ -147,24 +185,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onFilterSelected(Tag tag) {
-        Log.e(TAG,"tag select"+tag.getText());
-        Log.e(TAG, "onFiltersThree");
-        /*if(!tag.getText().isEmpty()){
+        Log.e(TAG,"tag select :"+tag.getText());
+        Log.e(TAG,"latitude : "+latitude);
+        Log.e(TAG,"longitude: "+longitude);
+        mMap.clear();
+        if(!tag.getText().isEmpty()){
             //TODO : verification d'une connexion Internet
 
             if(Network.isNetworkAvailable(MapsActivity.this)) {
                 //TODO : requête au web service
                 // Instantiate the RequestQueue.
+                if(latitude == 0.0 && longitude == 0.0)
+                {
+                    latitude = 48.864716;
+                    longitude = 2.349014;
+                }
+                LatLng myLocalisation = new LatLng(latitude, longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocalisation));
                 RequestQueue queue = Volley.newRequestQueue(MapsActivity.this);
-                String url = String.format(Constant.URL_GOOGLE_PLACE, editTextCity.getText().toString());
-
+                String url = String.format(Constant.URL_GOOGLE_PLACE, latitude, longitude, tag.getText());
+                Log.e(TAG,"url: "+url);
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 Log.e(TAG, "json: "+response);
-
                                 getData(response);
                             }
                         }, new Response.ErrorListener() {
@@ -183,7 +229,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             FastDialog.showDialog(MapsActivity.this, FastDialog.SIMPLE_DIALOG, "Vous devez renseigner une ville");
-        }*/
+        }
     }
 
     @Override
@@ -194,10 +240,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public List<Tag> getTags() {
         List<Tag> tags = new ArrayList<>();
         tags.add(new Tag("bar"));
-        tags.add(new Tag("bar2"));
-        tags.add(new Tag("bar3"));
-        tags.add(new Tag("bar4"));
+        tags.add(new Tag("liquor_store"));
+        tags.add(new Tag("bakery"));
+        tags.add(new Tag("restaurant"));
 
         return tags;
     }
+
+    private void getData(String json) {
+        Gson myGson = new Gson();
+        BeerBar owm = myGson.fromJson(json, BeerBar.class);
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+        if(owm.getResults().size() > 0 || owm.getStatus().equals("OK")) {
+            Log.e(TAG, "data");
+            for(BeerResult result : owm.getResults()){
+
+                setMarker(result.getGeometry(), result.getName(), result);
+            }
+
+        } else {
+            owm.setMessage("Aucun bar à proximité");
+            FastDialog.showDialog(MapsActivity.this, FastDialog.SIMPLE_DIALOG, owm.getMessage());
+        }
+    }
+
+    private void setMarker(BeerGeometry location, String title, BeerResult beerData) {
+        // Add a marker for beer and move the camera
+        LatLng bar =  new LatLng(location.getLocation().getLat(), location.getLocation().getLng());
+        Marker beer = mMap.addMarker(new MarkerOptions().position(bar).title(title));
+        beer.setTag(beerData);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent myIntent = new Intent(MapsActivity.this, DetailsActivity.class);
+                 BeerResult data = (BeerResult) marker.getTag();
+                 myIntent.putExtra("beerData", data);
+                startActivity(myIntent);
+                //Using position get Value from arraylist
+                return false;
+            }
+        });
+    }
+
 }

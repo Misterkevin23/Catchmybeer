@@ -1,10 +1,12 @@
 package com.example.kevin.catch_my_beer.models;
 
+import java.io.Serializable;
+
 /**
  * Created by kevin on 15/02/2018.
  */
 
-public class BeerResult {
+public class BeerResult implements Serializable {
     private String name;
     private String rating;
     private String vicinity;
@@ -51,7 +53,7 @@ public class BeerResult {
         this.opening_hours = opening_hours;
     }
 
-    private class Opening_hours{
+    private class Opening_hours implements Serializable{
         private boolean open_now;
 
         public boolean isOpen_now() {

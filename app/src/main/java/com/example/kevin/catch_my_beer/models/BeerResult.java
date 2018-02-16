@@ -5,11 +5,11 @@ package com.example.kevin.catch_my_beer.models;
  */
 
 public class BeerResult {
-    private String name;
-    private String rating;
-    private String vicinity;
-    private BeerGeometry geometry;
-    private Opening_hours opening_hours;
+    private String name; // Nom de l'établissment
+    private String rating; // Note de l'établissment
+    private String vicinity; // Nom de la rue
+    private BeerGeometry geometry; // localisation
+    private Opening_hours opening_hours; // Hoaire d'ouverture
 
     public String getName() {
         return name;
